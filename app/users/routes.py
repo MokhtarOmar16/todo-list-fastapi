@@ -14,16 +14,14 @@ async def signup(user_data: schemas.UserCreate, db: AsyncSession = Depends(get_d
 async def login(user_data: schemas.UserLogin, db: AsyncSession = Depends(get_db)):
     return await services.login_user(db, user_data)
 
-@router.post("/refresh", response_model=schemas.Token)
+@router.post("/refresh")
 async def refresh_token(request: schemas.RefreshTokenRequest):
     payload = verify_token(request.refresh_token, token_type="refresh")
     if not payload:
         raise HTTPException(status_code=401, detail="Invalid refresh token")
     user_id = payload.get("sub")
     access_token = services.create_access_token(data={"sub": str(user_id)})
-    refresh_token = services.create_refresh_token(data={"sub": str(user_id)})
+
     return {
         "access_token": access_token,
-        "refresh_token": refresh_token,
-        "token_type": "bearer"
     }

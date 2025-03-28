@@ -8,9 +8,11 @@ from app.users.models import User
 
 async def create_user(db: AsyncSession, user: schemas.UserCreate):
     hashed_pw = hash_password(user.password)
+    name = user.name or user.email.split("@")[0]
     db_user = models.User(
+        name = name,
         email=user.email,
-        password_hash=hashed_pw
+        password=hashed_pw
     )
     db.add(db_user)
     await db.commit()
@@ -30,6 +32,6 @@ async def authenticate_user(db: AsyncSession, email: str, password: str):
     user = await get_user_by_email(db, email)
     if not user:
         return None
-    if not verify_password(password, user.password_hash):
+    if not verify_password(password, user.password):
         return None
     return user

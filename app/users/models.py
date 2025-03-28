@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, String, Boolean
 from sqlalchemy.orm import relationship
 from app.core.config import settings
 from app.db.base import Base
-
+from app.todo.models import Todo
 
 class User(Base):
     __tablename__ = 'user'
@@ -10,4 +10,4 @@ class User(Base):
     name = Column(String, index=True)
     email = Column(String, unique=True, index=True)
     password = Column(String, nullable=False)
-    todos = relationship("Todo", back_populates="user")
+    todos = relationship(Todo, back_populates="user")
