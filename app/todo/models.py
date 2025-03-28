@@ -9,5 +9,5 @@ class Todo(Base):
     mission = Column(String, index=True)
     description = Column(String, index=True)
     completed = Column(Boolean, default=False)
-    user_id = Column(Integer, ForeignKey('User.id'),index=True)
+    user_id = Column(Integer, ForeignKey('user.id'),index=True)
     user = relationship("User", back_populates="todos")
